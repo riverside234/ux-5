@@ -1,7 +1,7 @@
-import { Button, Card, ListGroup } from "react-bootstrap";
+import { Button, Card, Carousel, ListGroup } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { useState, useContext } from "react";
 
 export default function BadgerBudSummary(props) {
   const [show, setShow] = useState(true);
@@ -37,17 +37,44 @@ export default function BadgerBudSummary(props) {
     }
   }
 
+  const handleSave = () => {
+    props.checkAdoptable(props.id);
+
+    alert(props.name + " has been added to your basket!");
+  };
+
   return (
     <div>
       <Card style={{ width: "20rem" }} className="my-3">
-        <Card.Img
-          src={
-            "https://raw.githubusercontent.com/CS571-F23/hw5-api-static-content/main/cats/" +
-            props.pictureID[0]
-          }
-          style={{ borderRadius: "6px" }}
-          variant="top"
-        />
+        {show ? (
+          <Card.Img
+            src={
+              "https://raw.githubusercontent.com/CS571-F23/hw5-api-static-content/main/cats/" +
+              props.pictureID[0]
+            }
+            style={{ borderRadius: "6px", aspectRatio: "1 / 1" }}
+            variant="top"
+            alt="car"
+          />
+        ) : (
+          <Carousel>
+            {props.pictureID.map((id) => {
+              return (
+                <Carousel.Item key={id}>
+                  <Card.Img
+                    src={
+                      "https://raw.githubusercontent.com/CS571-F23/hw5-api-static-content/main/cats/" +
+                      id
+                    }
+                    style={{ borderRadius: "6px", aspectRatio: "1 / 1" }}
+                    variant="top"
+                    alt="car"
+                  />
+                </Carousel.Item>
+              );
+            })}
+          </Carousel>
+        )}
         <Card.Body>
           <Card.Title>{props.name}</Card.Title>
 
@@ -69,7 +96,7 @@ export default function BadgerBudSummary(props) {
               {show ? "Show More" : "Show less"}
             </Button>
             {"  "}{" "}
-            <Button variant="secondary">
+            <Button variant="secondary " onClick={handleSave}>
               {" "}
               <FontAwesomeIcon icon={faHeart} style={{ color: "red" }} /> Save
             </Button>
